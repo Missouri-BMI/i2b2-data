@@ -89,10 +89,10 @@ BEGIN
                      || ' and numpats is null';
 
             begin
-            	execute IMMEDIATE :v_sqlstr;
-			EXCEPTION WHEN OTHER THEN
-				return 0;
-   			END;
+                execute IMMEDIATE :v_sqlstr;
+                EXCEPTION WHEN OTHER THEN
+                return 0;
+            END;
 	
     END FOR;
 
