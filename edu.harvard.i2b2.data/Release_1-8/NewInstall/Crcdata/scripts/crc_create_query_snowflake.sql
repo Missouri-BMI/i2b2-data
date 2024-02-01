@@ -1,7 +1,5 @@
 /*==============================================================*/
-/* SNOWFLAKE Database Script to create CRC query tables         */
-/*         MD SABER HOSSAIN	7/14/2023							*/
-/*         University of Missouri-Columbia						*
+/* Snowflake Database Script to create CRC query tables         */
 /*==============================================================*/
 
 
@@ -126,7 +124,7 @@ CREATE OR REPLACE TABLE QT_PATIENT_ENC_COLLECTION (
 /*============================================================================*/
 CREATE OR REPLACE SEQUENCE SEQ_QT_XML_RESULT START = 1 INCREMENT = 1; 
 CREATE OR REPLACE TABLE QT_XML_RESULT (
-	XML_RESULT_ID		NUMBER(38, 0) NOT NULL DEFAULT SEQ_QT_PATIENT_ENC_COLLECTION.NEXTVAL PRIMARY KEY,
+	XML_RESULT_ID		NUMBER(38, 0) NOT NULL DEFAULT SEQ_QT_XML_RESULT.NEXTVAL PRIMARY KEY,
 	RESULT_INSTANCE_ID	INT,
 	XML_VALUE			TEXT
 )
@@ -182,15 +180,14 @@ CREATE OR REPLACE TABLE QT_PRIVILEGE(
 /*============================================================================*/
 /* Table: QT_BREAKDOWN_PATH											          */
 /*============================================================================*/
-CREATE OR REPLACE TABLE QT_BREAKDOWN_PATH (
+CREATE TABLE QT_BREAKDOWN_PATH (
 	NAME			VARCHAR(100), 
-	VALUE			VARCHAR(2000), 
+	VALUE			TEXT, 
 	CREATE_DATE		TIMESTAMP,
 	UPDATE_DATE		TIMESTAMP,
 	USER_ID			VARCHAR(50)
 )
 ;
-
 
 /*============================================================================*/
 /* Table:QT_PDO_QUERY_MASTER 										          */
@@ -231,25 +228,47 @@ insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,DESCRIPTION,DISPLAY_TYPE_ID
 ;
 insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(4,'PATIENT_COUNT_XML','Number of patients','CATNUM','LA','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientCountGenerator')
 ;
-insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(5,'PATIENT_GPCSITE_COUNT_XML','GPC Site breakdown','CATNUM','LH','edu.harvard.i2b2.crc.dao.setfinder.QueryResultGenerator')
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(5,'PATIENT_GENDER_COUNT_XML','Gender patient breakdown','CATNUM','LA','edu.harvard.i2b2.crc.dao.setfinder.QueryResultGenerator')
 ;
-insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(6,'PATIENT_GENDER_COUNT_XML','Gender patient breakdown','CATNUM','LA','edu.harvard.i2b2.crc.dao.setfinder.QueryResultGenerator')
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(6,'PATIENT_VITALSTATUS_COUNT_XML','Vital Status patient breakdown','CATNUM','LA','edu.harvard.i2b2.crc.dao.setfinder.QueryResultGenerator')
 ;
-insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(7,'PATIENT_VITALSTATUS_COUNT_XML','Vital Status patient breakdown','CATNUM','LA','edu.harvard.i2b2.crc.dao.setfinder.QueryResultGenerator')
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(7,'PATIENT_RACE_COUNT_XML','Race patient breakdown','CATNUM','LA','edu.harvard.i2b2.crc.dao.setfinder.QueryResultGenerator')
 ;
-insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(8,'PATIENT_RACE_COUNT_XML','Race patient breakdown','CATNUM','LA','edu.harvard.i2b2.crc.dao.setfinder.QueryResultGenerator')
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(8,'PATIENT_AGE_COUNT_XML','Age patient breakdown','CATNUM','LA','edu.harvard.i2b2.crc.dao.setfinder.QueryResultGenerator')
 ;
-insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(9,'PATIENT_AGE_COUNT_XML','Age patient breakdown','CATNUM','LA','edu.harvard.i2b2.crc.dao.setfinder.QueryResultGenerator')
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(9,'PATIENTSET','Timeline','LIST','LA','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientSetGenerator')
 ;
-insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(10,'PATIENTSET','Timeline','LIST','LA','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientSetGenerator')
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(10,'PATIENT_LOS_XML','DATA_LDS','Length of stay breakdown','CATNUM','LA','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientSQLCountGenerator')
 ;
-insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(11,'PATIENT_LOS_XML','DATA_LDS','Length of stay breakdown','CATNUM','LA','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientSQLCountGenerator')
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(11,'PATIENT_TOP20MEDS_XML','DATA_LDS','Top 20 medications breakdown','CATNUM','LA','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientSQLCountGenerator')
 ;
-insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(12,'PATIENT_TOP20MEDS_XML','DATA_LDS','Top 20 medications breakdown','CATNUM','LA','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientSQLCountGenerator')
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(12,'PATIENT_TOP20DIAG_XML','DATA_LDS','Top 20 diagnoses breakdown','CATNUM','LA','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientSQLCountGenerator')
 ;
-insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(13,'PATIENT_TOP20DIAG_XML','DATA_LDS','Top 20 diagnoses breakdown','CATNUM','LA','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientSQLCountGenerator')
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(13,'PATIENT_INOUT_XML','DATA_LDS','Inpatient and outpatient breakdown','CATNUM','LA','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientSQLCountGenerator')
 ;
-insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(14,'PATIENT_INOUT_XML','DATA_LDS','Inpatient and outpatient breakdown','CATNUM','LA','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientSQLCountGenerator')
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(114,'PATIENT_DEMOGRAPHIC_REQUEST','DATA_LDS','Request Demographics Data','CATNUM','LR','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientRequest')
+;
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(115,'PATIENT_MEDICATION_REQUEST','DATA_LDS','Request Medication Data','CATNUM','LR','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientRequest')
+;
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(116,'PATIENT_PROCEDURE_REQUEST','DATA_LDS','Request Procedure Data','CATNUM','LR','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientRequest')
+;
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(117,'PATIENT_DIAGNOSIS_REQUEST','DATA_LDS','Request Diagnosis Data','CATNUM','LR','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientRequest')
+;
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(118,'PATIENT_LAB_REQUEST','DATA_LDS','Request Lab Data','CATNUM','LR','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientRequest')
+;
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(119,'PATIENT_DEMOGRAPHIC_CSV','MANAGER','Export Demographics Data','CATNUM','LX','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientDownload')
+;
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(120,'PATIENT_MEDICATION_CSV','MANAGER','Export Medication Data','CATNUM','LX','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientDownload')
+;
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(121,'PATIENT_PROCEDURE_CSV','MANAGER','Export Procedure Data','CATNUM','LX','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientDownload')
+;
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(122,'PATIENT_DIAGNOSIS_CSV','MANAGER','Export Diagnosis Data','CATNUM','LX','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientDownload')
+;
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(123,'PATIENT_LAB_CSV','MANAGER','Export Lab Data','CATNUM','LX','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientDownload')
+;
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(124,'PATIENT_MAPPING_CSV','MANAGER','Export Patient Mapping','CATNUM','LX','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientDownload')
+;
+insert into QT_QUERY_RESULT_TYPE(RESULT_TYPE_ID,NAME,USER_ROLE_CD,DESCRIPTION,DISPLAY_TYPE_ID,VISUAL_ATTRIBUTE_TYPE_ID,CLASSNAME) values(126,'PATIENT_MAPPING_REQUEST','DATA_LDS','Request Patient Mapping','CATNUM','LR','edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientRequest')
 ;
 
 
@@ -261,28 +280,3 @@ insert into QT_PRIVILEGE(PROTECTION_LABEL_CD,DATAPROT_CD,HIVEMGMT_CD) values ('S
 insert into QT_PRIVILEGE(PROTECTION_LABEL_CD,DATAPROT_CD,HIVEMGMT_CD) values ('UPLOAD','DATA_OBFSC','MANAGER');
 insert into QT_PRIVILEGE(PROTECTION_LABEL_CD,DATAPROT_CD,HIVEMGMT_CD) values ('SETFINDER_QRY_WITH_LGTEXT','DATA_DEID','USER'); 
 insert into QT_PRIVILEGE(PROTECTION_LABEL_CD, DATAPROT_CD, HIVEMGMT_CD) values ('SETFINDER_QRY_PROTECTED','DATA_PROT','USER');
-
-
-
-
-
-INSERT INTO QT_BREAKDOWN_PATH(NAME,VALUE,CREATE_DATE) VALUES ('PATIENT_GPCSITE_COUNT_XML','\\\\ACT_DEMO\\ACT\\Demographics\\GPC Sites\\', CURRENT_TIMESTAMP);
-INSERT INTO QT_BREAKDOWN_PATH(NAME,VALUE,CREATE_DATE) VALUES ('PATIENT_GENDER_COUNT_XML','\\\\ACT_DEMO\\ACT\\Demographics\\Sex\\', CURRENT_TIMESTAMP);
-INSERT INTO QT_BREAKDOWN_PATH(NAME,VALUE,CREATE_DATE) VALUES ('PATIENT_RACE_COUNT_XML','\\\\ACT_DEMO\\ACT\\Demographics\\Race\\', CURRENT_TIMESTAMP);
-INSERT INTO QT_BREAKDOWN_PATH(NAME,VALUE,CREATE_DATE) VALUES ('PATIENT_VITALSTATUS_COUNT_XML','\\\\ACT_DEMO\\ACT\\Demographics\\Vital Status\\',CURRENT_TIMESTAMP);
-INSERT INTO QT_BREAKDOWN_PATH(NAME,VALUE,CREATE_DATE) VALUES ('PATIENT_AGE_COUNT_XML','\\\\ACT_DEMO\\ACT\\Demographics\\Age\\', CURRENT_TIMESTAMP);
-INSERT INTO qt_breakdown_path (name, value, create_date) VALUES ('PATIENT_LOS_XML','select length_of_stay as patient_range, count(distinct a.PATIENT_num) as patient_count from visit_dimension a, DX b where a.patient_num = b.patient_num group by a.length_of_stay order by 1', CURRENT_TIMESTAMP);
-INSERT INTO qt_breakdown_path (name, value, create_date) VALUES ('PATIENT_TOP20MEDS_XML','select b.name_char as patient_range, count(distinct a.patient_num) as patient_count from prescribing_fact a, concept_dimension b, DX c where a.concept_cd = b.concept_cd and concept_path like ''\\\\ACT\\\\Medications\\\\%'' and a.patient_num = c.patient_num   group by name_char order by patient_count desc limit 20', CURRENT_TIMESTAMP);
-INSERT INTO qt_breakdown_path (name, value, create_date) VALUES ('PATIENT_TOP20DIAG_XML','select b.name_char as patient_range, count(distinct a.patient_num) as patient_count from diagnosis_fact a, concept_dimension b, DX c where a.concept_cd = b.concept_cd and concept_path like ''\\\\ACT\\\\Diagnosis\\\\%'' and a.patient_num = c.patient_num   group by name_char order by patient_count desc limit 20', CURRENT_TIMESTAMP);
-INSERT INTO qt_breakdown_path  (name, value, create_date) VALUES ('PATIENT_INOUT_XML','select INOUT_CD as patient_range, count(distinct a.patient_num) as patient_count from visit_dimension a, DX b where a.patient_num = b.patient_num group by a.INOUT_CD order by 1', CURRENT_TIMESTAMP);
-
-
-
-
-
-
-
-
-
-
-

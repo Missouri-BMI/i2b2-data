@@ -1,0 +1,5 @@
+#!/bin/bash
+
+zip crcdataQT_BREAKDOWNS_Snowflake.zip \
+ QT_BREAKDOWN_PATH_Snowflake.sql QT_QUERY_RESULT_TYPE_Snowflake.sql \
+ && rm QT_BREAKDOWN_PATH_Snowflake.sql QT_QUERY_RESULT_TYPE_Snowflake.sql

@@ -6,7 +6,7 @@ $Id: data_build.xml,v 1.5 2010/06/04 15:33:06 lcp5 Exp $
 
 	<property environment="env" />
 
-	<property file="./db.properties" />
+	<property file="./db-prod.properties" />
 
 
 	<!-- =================================================================== -->

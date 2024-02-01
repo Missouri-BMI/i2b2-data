@@ -45,19 +45,14 @@ BEGIN
         
       -- CREATE INDEX ontPatVisitDimsfname ON ontPatVisitDims(c_fullname);
     
-    -- ACT_VISIT_DETAILS_V4 age at visit subquery in c_dimcode
     /*
-
-     select count(distinct(patient_num))  from I2B2DATA.visit_dimension 
-     where start_date BETWEEN 
-     (select min(birth_date) + (INTERVAL '4 months') from PATIENT_DIMENSION where patient_num =VISIT_DIMENSION.PATIENT_NUM) AND 
-     (select min(birth_date) + (INTERVAL '5 months')  - (INTERVAL '1 day') from PATIENT_DIMENSION where patient_num =VISIT_DIMENSION.PATIENT_NUM)
+        snowflake visit at age
      */
-        IF (tabname = 'ACT_VISIT_DETAILS_V4') THEN
-            c_dimcode := replace(curRecord.c_dimcode, 'from PATIENT_DIMENSION', 'from ' || tableschema || '.' || 'PATIENT_DIMENSION');
-        ELSE
-            c_dimcode := curRecord.c_dimcode;
-        END IF;
+        -- add schema name in patient_dimension, visit_dimension in c_dimcode
+        c_dimcode := curRecord.c_dimcode;
+
+        c_dimcode := replace(c_dimcode, 'PATIENT_DIMENSION',  tableschema || '.' || 'PATIENT_DIMENSION');
+        c_dimcode := replace(c_dimcode, 'VISIT_DIMENSION',  tableschema || '.' || 'VISIT_DIMENSION');
 
        v_sqlstr := 'update ontPatVisitDims '
        || ' set numpats =  ( '                     
@@ -85,7 +80,7 @@ BEGIN
             
             v_sqlstr := v_sqlstr -- || ' ) ' -- in
                      || ' ) ' -- set
-                     || ' where c_fullname = ' || '''' || replace(curRecord.c_fullname,'\\','\\\\') || '''' 
+                     || ' where c_fullname = ' || '''' || replace(replace(curRecord.c_fullname,'\\','\\\\'),'\'', '\\\'') || '''' 
                      || ' and numpats is null';
 
             begin
