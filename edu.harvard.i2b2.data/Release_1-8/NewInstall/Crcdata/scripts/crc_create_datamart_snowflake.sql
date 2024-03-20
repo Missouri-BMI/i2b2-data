@@ -167,23 +167,22 @@ CREATE TABLE PROVIDER_DIMENSION (
 CREATE TABLE VISIT_DIMENSION ( 
 	ENCOUNTER_NUM       INT NOT NULL,
 	PATIENT_NUM        	INT NOT NULL,
-	PROVIDER_ID         VARCHAR(50) NOT NULL,
+	ACTIVE_STATUS_CD	VARCHAR(50) default null,
 	START_DATE          DATE NULL,
 	END_DATE            DATE NULL,
-	ENC_TYPE            VARCHAR(2) NULL,
-	LENGTH_OF_STAY      INT NULL,
-	ACTIVE_STATUS_CD	VARCHAR(50) default null,
 	INOUT_CD       		VARCHAR(50) NULL default null,
 	LOCATION_CD    		VARCHAR(50) NULL default null,
 	LOCATION_PATH  		VARCHAR(900) NULL default null,
+	LENGTH_OF_STAY      INT NULL,
 	VISIT_BLOB     		TEXT NULL default null,
 	UPDATE_DATE         DATE NULL,
 	DOWNLOAD_DATE       DATE NULL,
 	IMPORT_DATE         DATE NULL,
 	SOURCESYSTEM_CD     VARCHAR(50) NULL,
 	UPLOAD_ID       	INT NULL
-	)
+)
 ;
+
 
 
 ------------------------------------------------------------
