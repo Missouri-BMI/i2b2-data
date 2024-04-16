@@ -39,11 +39,11 @@ $Id: data_build.xml,v 1.3 2010/05/23 20:21:51 rk903 Exp $
 	</target>
 
         <target name="load_demodata" depends="init" description="Load Demo Data">
-                        <echo message="${Name}: CRC Data" />
+                        <!-- <echo message="${Name}: CRC Data" />
                             <ant antfile="data_build.xml"  dir="./Crcdata" target="db_demodata_load_data"/>
 
                         <echo message="${Name}: Ontology Data" />
-                            <ant antfile="data_build.xml"  dir="./Metadata" target="db_metadata_load_data"/>
+                            <ant antfile="data_build.xml"  dir="./Metadata" target="db_metadata_load_data"/> -->
 
                         <echo message="${Name}: Work Data" />
                             <ant antfile="data_build.xml"  dir="./Workdata" target="db_workdata_load_data"/>
