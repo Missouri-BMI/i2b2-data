@@ -80,7 +80,7 @@ BEGIN
             
             v_sqlstr := v_sqlstr -- || ' ) ' -- in
                      || ' ) ' -- set
-                     || ' where c_fullname = ' || '''' || replace(curRecord.c_fullname,'\\','\\\\') || '''' 
+                     || ' where c_fullname = ' || '''' || replace(replace(curRecord.c_fullname,'\\','\\\\'),'\'', '\\\'') || '''' 
                      || ' and numpats is null';
 
             begin
