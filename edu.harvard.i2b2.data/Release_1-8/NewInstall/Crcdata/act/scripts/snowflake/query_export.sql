@@ -28,7 +28,7 @@ INSERT INTO QT_BREAKDOWN_PATH (NAME, VALUE, CREATE_DATE, UPDATE_DATE, USER_ID) V
     as "VITAL_STATUS"
     FROM {{{FULL_SCHEMA}}}patient_dimension a, {{{DX}}} c
   where a.patient_num = c.patient_num</Query>
-      	<SeparatorCharacter>\t</SeparatorCharacter>
+      	<SeparatorCharacter>\\t</SeparatorCharacter>
   </File>
 </ValueExporter>',
 NULL, NULL, NULL);
@@ -58,7 +58,7 @@ INSERT INTO QT_BREAKDOWN_PATH (NAME, VALUE, CREATE_DATE, UPDATE_DATE, USER_ID) V
       ,a.PATIENT_IDE as "PATIENT_IDE"
   FROM {{{FULL_SCHEMA}}}patient_mapping a, {{{DX}}} c
   where a.patient_num = c.patient_num</Query>
-      	<SeparatorCharacter>\t</SeparatorCharacter>
+      	<SeparatorCharacter>\\t</SeparatorCharacter>
   </File>
 </ValueExporter>',
 NULL, NULL, NULL);
@@ -97,13 +97,13 @@ INSERT INTO QT_BREAKDOWN_PATH (NAME, VALUE, CREATE_DATE, UPDATE_DATE, USER_ID) V
         ,p.name_char as "PROVIDER"
         ,to_char(a.encounter_num, ''FM999999999999999999'') as "ENCOUNTER_NUMBER"
     FROM {{{FULL_SCHEMA}}}observation_fact  a 
-    INNER  JOIN {{{FULL_SCHEMA}}}concept_dimension b on a.concept_cd = b.concept_cd and b.concept_path like ''\\ACT\\Medications\\%''
+    INNER  JOIN {{{FULL_SCHEMA}}}concept_dimension b on a.concept_cd = b.concept_cd and b.concept_path like ''\\\\ACT\\\\Medications\\\\%''
     JOIN {{{DX}}} c on a.patient_num = c.patient_num
     LEFT OUTER JOIN {{{FULL_SCHEMA}}}provider_dimension p on a.provider_id = p.provider_id
     LEFT JOIN {{{FULL_SCHEMA}}}visit_dimension v on a.encounter_num = v.encounter_num and a.patient_num = v.patient_num
-    LEFT JOIN {{{FULL_SCHEMA}}}concept_dimension w on w.concept_cd = v.inout_cd and w.concept_path like ''\\ACT\Visit Details\\Visit type\\%''
+    LEFT JOIN {{{FULL_SCHEMA}}}concept_dimension w on w.concept_cd = v.inout_cd and w.concept_path like ''\\\\ACT\\\\Visit Details\\\\Visit type\\\\%''
     LEFT JOIN {{{FULL_SCHEMA}}}modifier_dimension m on m.modifier_cd = a.modifier_cd</Query>
-      	<SeparatorCharacter>\t</SeparatorCharacter>
+      	<SeparatorCharacter>\\t</SeparatorCharacter>
   </File></ValueExporter>',
 NULL, NULL, NULL);
 
@@ -140,13 +140,13 @@ INSERT INTO QT_BREAKDOWN_PATH (NAME, VALUE, CREATE_DATE, UPDATE_DATE, USER_ID) V
         ,p.name_char as "PROVIDER"
         ,to_char(a.encounter_num, ''FM999999999999999999'') as "ENCOUNTER_NUMBER"
     FROM {{{FULL_SCHEMA}}}observation_fact  a 
-    INNER  JOIN {{{FULL_SCHEMA}}}concept_dimension b on a.concept_cd = b.concept_cd and b.concept_path like ''\\ACT\\Procedures\\%''
+    INNER  JOIN {{{FULL_SCHEMA}}}concept_dimension b on a.concept_cd = b.concept_cd and b.concept_path like ''\\\\ACT\\\\Procedures\\\\%''
     JOIN {{{DX}}} c on a.patient_num = c.patient_num
     LEFT OUTER JOIN {{{FULL_SCHEMA}}}provider_dimension p on a.provider_id = p.provider_id
     LEFT JOIN {{{FULL_SCHEMA}}}visit_dimension v on a.encounter_num = v.encounter_num and a.patient_num = v.patient_num
-    LEFT JOIN {{{FULL_SCHEMA}}}concept_dimension w on w.concept_cd = v.inout_cd and w.concept_path like ''\\ACT\\Visit Details\\Visit type\\%''
+    LEFT JOIN {{{FULL_SCHEMA}}}concept_dimension w on w.concept_cd = v.inout_cd and w.concept_path like ''\\\\ACT\\\\Visit Details\\\\Visit type\\\\%''
     LEFT JOIN {{{FULL_SCHEMA}}}modifier_dimension m on m.modifier_cd = a.modifier_cd</Query>
-      	<SeparatorCharacter>\t</SeparatorCharacter>
+      	<SeparatorCharacter>\\t</SeparatorCharacter>
   </File></ValueExporter>',
 NULL, NULL, NULL);
 
@@ -183,14 +183,14 @@ INSERT INTO QT_BREAKDOWN_PATH (NAME, VALUE, CREATE_DATE, UPDATE_DATE, USER_ID) V
        ,p.name_char as "PROVIDER"
        ,to_char(a.encounter_num, ''FM999999999999999999'') as "ENCOUNTER_NUMBER"
    FROM {{{FULL_SCHEMA}}}observation_fact  a 
-   INNER  JOIN {{{FULL_SCHEMA}}}concept_dimension b on a.concept_cd = b.concept_cd and b.concept_path like ''\\ACT\\Diagnosis\\%''
+   INNER  JOIN {{{FULL_SCHEMA}}}concept_dimension b on a.concept_cd = b.concept_cd and b.concept_path like ''\\\\ACT\\\\Diagnosis\\\\%''
    JOIN {{{DX}}} c on a.patient_num = c.patient_num
     LEFT OUTER JOIN {{{FULL_SCHEMA}}}provider_dimension p on a.provider_id = p.provider_id
     LEFT JOIN {{{FULL_SCHEMA}}}visit_dimension v on a.encounter_num = v.encounter_num and a.patient_num = v.patient_num
-    LEFT JOIN {{{FULL_SCHEMA}}}concept_dimension w on w.concept_cd = v.inout_cd and w.concept_path like ''\\ACT\\Visit Details\\Visit type\\%''
+    LEFT JOIN {{{FULL_SCHEMA}}}concept_dimension w on w.concept_cd = v.inout_cd and w.concept_path like ''\\\\ACT\\\\Visit Details\\\\Visit type\\\\%''
     LEFT JOIN {{{FULL_SCHEMA}}}modifier_dimension m on m.modifier_cd = a.modifier_cd
    </Query>
-      	<SeparatorCharacter>\t</SeparatorCharacter>
+      	<SeparatorCharacter>\\t</SeparatorCharacter>
   </File>
 </ValueExporter>',
 NULL, NULL, NULL);
@@ -231,14 +231,14 @@ INSERT INTO QT_BREAKDOWN_PATH (NAME, VALUE, CREATE_DATE, UPDATE_DATE, USER_ID) V
        ,p.name_char as "PROVIDER"
        ,to_char(a.encounter_num, ''FM999999999999999999'') as "ENCOUNTER_NUMBER"
    FROM {{{FULL_SCHEMA}}}observation_fact  a 
-   INNER  JOIN {{{FULL_SCHEMA}}}concept_dimension b on a.concept_cd = b.concept_cd and b.concept_path like ''\\ACT\\Lab\\%''
+   INNER  JOIN {{{FULL_SCHEMA}}}concept_dimension b on a.concept_cd = b.concept_cd and b.concept_path like ''\\\\ACT\\\\Lab\\\\%''
    JOIN {{{DX}}} c on a.patient_num = c.patient_num
     LEFT OUTER JOIN {{{FULL_SCHEMA}}}provider_dimension p on a.provider_id = p.provider_id
     LEFT JOIN {{{FULL_SCHEMA}}}visit_dimension v on a.encounter_num = v.encounter_num and a.patient_num = v.patient_num
-    LEFT JOIN {{{FULL_SCHEMA}}}concept_dimension w on w.concept_cd = v.inout_cd and w.concept_path like ''\\ACT\\Visit Details\\Visit type\\%''
+    LEFT JOIN {{{FULL_SCHEMA}}}concept_dimension w on w.concept_cd = v.inout_cd and w.concept_path like ''\\\\ACT\\\\Visit Details\\\\Visit type\\\\%''
     LEFT JOIN {{{FULL_SCHEMA}}}modifier_dimension m on m.modifier_cd = a.modifier_cd
 	</Query>
-      	<SeparatorCharacter>\t</SeparatorCharacter>
+      	<SeparatorCharacter>\\t</SeparatorCharacter>
   </File>
 </ValueExporter>',
 NULL, NULL, NULL);

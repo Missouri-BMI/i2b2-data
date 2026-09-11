@@ -1,5 +1,5 @@
 CREATE OR REPLACE PROCEDURE run_on_all_fact(
-
+    crc_schema VARCHAR DEFAULT 'I2B2DATA'
 )
 RETURNS INTEGER NULL
 LANGUAGE SQL
@@ -18,6 +18,6 @@ BEGIN
         tableName := split_part(record.c_facttablecolumn, '.', 0);
         ont_table := record.c_table_name;
         EXECUTE IMMEDIATE ('update ' || ont_table || ' set c_totalnum = null');
-        call RUNTOTALNUM(:tableName, 'I2B2DATA', :ont_table);
+        call RUNTOTALNUM(:tableName, :crc_schema, :ont_table);
     end for;
 END;

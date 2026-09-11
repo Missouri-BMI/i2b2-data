@@ -6,8 +6,9 @@
 /*============================================================================*/
 /* Table: QT_QUERY_MASTER                                                     */
 /*============================================================================*/
+CREATE OR REPLACE SEQUENCE SEQ_QT_QUERY_MASTER START = 1 INCREMENT = 1;
 CREATE TABLE QT_QUERY_MASTER (
-    QUERY_MASTER_ID     INTEGER AUTOINCREMENT PRIMARY KEY,
+    QUERY_MASTER_ID     INTEGER NOT NULL DEFAULT SEQ_QT_QUERY_MASTER.NEXTVAL PRIMARY KEY,
     NAME                VARCHAR(250)  NOT NULL,
     USER_ID             VARCHAR(50)   NOT NULL,
     GROUP_ID            VARCHAR(50)   NOT NULL,
@@ -32,7 +33,8 @@ CREATE TABLE QT_QUERY_RESULT_TYPE (
     DISPLAY_TYPE_ID             VARCHAR(500),
     VISUAL_ATTRIBUTE_TYPE_ID    VARCHAR(3),
     USER_ROLE_CD                VARCHAR(255),
-    CLASSNAME                   VARCHAR(200)
+    CLASSNAME                   VARCHAR(200),
+    VISUAL_TYPE                 TEXT
 );
 
 /*============================================================================*/
@@ -47,8 +49,9 @@ CREATE TABLE QT_QUERY_STATUS_TYPE (
 /*============================================================================*/
 /* Table: QT_QUERY_INSTANCE                                                   */
 /*============================================================================*/
+CREATE OR REPLACE SEQUENCE SEQ_QT_QUERY_INSTANCE START = 1 INCREMENT = 1;
 CREATE TABLE QT_QUERY_INSTANCE (
-    QUERY_INSTANCE_ID   INTEGER AUTOINCREMENT PRIMARY KEY,
+    QUERY_INSTANCE_ID   INTEGER NOT NULL DEFAULT SEQ_QT_QUERY_INSTANCE.NEXTVAL PRIMARY KEY,
     QUERY_MASTER_ID     INTEGER,
     USER_ID             VARCHAR(50)   NOT NULL,
     GROUP_ID            VARCHAR(50)   NOT NULL,
@@ -65,8 +68,9 @@ CREATE TABLE QT_QUERY_INSTANCE (
 /*============================================================================*/
 /* Table: QT_QUERY_RESULT_INSTANCE                                            */
 /*============================================================================*/
+CREATE OR REPLACE SEQUENCE SEQ_QT_QUERY_RESULT_INSTANCE START = 1 INCREMENT = 1;
 CREATE TABLE QT_QUERY_RESULT_INSTANCE (
-    RESULT_INSTANCE_ID  INTEGER AUTOINCREMENT PRIMARY KEY,
+    RESULT_INSTANCE_ID  INTEGER NOT NULL DEFAULT SEQ_QT_QUERY_RESULT_INSTANCE.NEXTVAL PRIMARY KEY,
     QUERY_INSTANCE_ID   INTEGER,
     RESULT_TYPE_ID      INTEGER       NOT NULL,
     SET_SIZE            INTEGER,
@@ -86,8 +90,9 @@ CREATE TABLE QT_QUERY_RESULT_INSTANCE (
 /*============================================================================*/
 /* Table: QT_PATIENT_SET_COLLECTION                                           */
 /*============================================================================*/
+CREATE OR REPLACE SEQUENCE SEQ_QT_PATIENT_SET_COLLECTION START = 1 INCREMENT = 1;
 CREATE TABLE QT_PATIENT_SET_COLLECTION (
-    PATIENT_SET_COLL_ID INTEGER AUTOINCREMENT PRIMARY KEY,
+    PATIENT_SET_COLL_ID INTEGER NOT NULL DEFAULT SEQ_QT_PATIENT_SET_COLLECTION.NEXTVAL PRIMARY KEY,
     RESULT_INSTANCE_ID  INTEGER,
     SET_INDEX           INTEGER,
     PATIENT_NUM         INTEGER,
@@ -97,8 +102,9 @@ CREATE TABLE QT_PATIENT_SET_COLLECTION (
 /*============================================================================*/
 /* Table: QT_PATIENT_ENC_COLLECTION                                           */
 /*============================================================================*/
+CREATE OR REPLACE SEQUENCE SEQ_QT_PATIENT_ENC_COLLECTION START = 1 INCREMENT = 1;
 CREATE TABLE QT_PATIENT_ENC_COLLECTION (
-    PATIENT_ENC_COLL_ID INTEGER AUTOINCREMENT PRIMARY KEY,
+    PATIENT_ENC_COLL_ID INTEGER NOT NULL DEFAULT SEQ_QT_PATIENT_ENC_COLLECTION.NEXTVAL PRIMARY KEY,
     RESULT_INSTANCE_ID  INTEGER,
     SET_INDEX           INTEGER,
     PATIENT_NUM         INTEGER,
@@ -109,8 +115,9 @@ CREATE TABLE QT_PATIENT_ENC_COLLECTION (
 /*============================================================================*/
 /* Table: QT_XML_RESULT                                                       */
 /*============================================================================*/
+CREATE OR REPLACE SEQUENCE SEQ_QT_XML_RESULT START = 1 INCREMENT = 1;
 CREATE TABLE QT_XML_RESULT (
-    XML_RESULT_ID       INTEGER AUTOINCREMENT PRIMARY KEY,
+    XML_RESULT_ID       INTEGER NOT NULL DEFAULT SEQ_QT_XML_RESULT.NEXTVAL PRIMARY KEY,
     RESULT_INSTANCE_ID  INTEGER,
     XML_VALUE           TEXT,
     CONSTRAINT QT_FK_XMLR_RIID FOREIGN KEY (RESULT_INSTANCE_ID) REFERENCES QT_QUERY_RESULT_INSTANCE (RESULT_INSTANCE_ID)
@@ -172,8 +179,9 @@ CREATE TABLE QT_BREAKDOWN_PATH (
 /*============================================================================*/
 /* Table: QT_PDO_QUERY_MASTER                                                 */
 /*============================================================================*/
+CREATE OR REPLACE SEQUENCE SEQ_QT_PDO_QUERY_MASTER START = 1 INCREMENT = 1;
 CREATE TABLE QT_PDO_QUERY_MASTER (
-    QUERY_MASTER_ID     INTEGER AUTOINCREMENT PRIMARY KEY,
+    QUERY_MASTER_ID     INTEGER NOT NULL DEFAULT SEQ_QT_PDO_QUERY_MASTER.NEXTVAL PRIMARY KEY,
     USER_ID             VARCHAR(50)   NOT NULL,
     GROUP_ID            VARCHAR(50)   NOT NULL,
     CREATE_DATE         TIMESTAMP_NTZ NOT NULL,
@@ -292,3 +300,157 @@ INSERT INTO QT_PRIVILEGE (PROTECTION_LABEL_CD, DATAPROT_CD, HIVEMGMT_CD) VALUES
     ('UPLOAD',                              'DATA_OBFSC','MANAGER'),
     ('SETFINDER_QRY_WITH_LGTEXT',           'DATA_DEID', 'USER'),
     ('SETFINDER_QRY_PROTECTED',             'DATA_PROT', 'USER');
+
+INSERT INTO QT_QUERY_RESULT_TYPE (RESULT_TYPE_ID, NAME, USER_ROLE_CD, DESCRIPTION, DISPLAY_TYPE_ID, VISUAL_ATTRIBUTE_TYPE_ID, CLASSNAME) VALUES
+    (9999, 'ADMIN_QUERY_DASHBOARD_CLASS_XML', 'ADMIN', 'Query Dashboard', 'CATNUM', 'LH', 'edu.harvard.i2b2.crc.dao.setfinder.QueryResultPatientSQLCountGenerator');
+
+INSERT INTO qt_breakdown_path (name, value, create_date, update_date, user_id, group_id) VALUES ('ADMIN_QUERY_DASHBOARD_CLASS_XML', 'SELECT query_name, patient_range, patient_count
+FROM (
+    SELECT
+        ''ADMIN_TOPUSERS'' AS query_name,
+        user_id::text AS patient_range,
+        COUNT(user_id) AS patient_count
+    FROM {{{DATABASE_NAME}}}QT_QUERY_MASTER
+	 where  delete_flag <>''Y''
+ and group_id = ''{{{PROJECT_ID}}}''
+    GROUP BY user_id
+    ORDER BY patient_count DESC
+    LIMIT 10
+) a
+
+UNION
+
+SELECT query_name, patient_range, patient_count
+FROM (
+    SELECT
+        ''ADMIN_TOPUSERS_30_DAYS'' AS query_name,
+        user_id::text AS patient_range,
+        COUNT(user_id) AS patient_count
+    FROM {{{DATABASE_NAME}}}QT_QUERY_MASTER
+    WHERE create_date >= CURRENT_TIMESTAMP - INTERVAL ''30 days''
+	and delete_flag <>''Y''
+ and group_id = ''{{{PROJECT_ID}}}''
+    GROUP BY user_id
+    ORDER BY patient_count DESC
+    LIMIT 10
+) a
+
+UNION
+
+SELECT query_name, patient_range, patient_count
+FROM (
+    SELECT
+        ''ADMIN_TOPUSERS_7_DAYS'' AS query_name,
+        user_id::text AS patient_range,
+        COUNT(user_id) AS patient_count
+    FROM {{{DATABASE_NAME}}}QT_QUERY_MASTER
+    WHERE create_date >= CURRENT_TIMESTAMP - INTERVAL ''7 days''
+	and delete_flag <>''Y''
+ and group_id = ''{{{PROJECT_ID}}}''
+    GROUP BY user_id
+    ORDER BY patient_count DESC
+    LIMIT 10
+) a
+
+UNION
+
+SELECT query_name, patient_range, patient_count
+FROM (
+    SELECT
+        ''ADMIN_TOPUSERS_1_DAY'' AS query_name,
+        user_id::text AS patient_range,
+        COUNT(user_id) AS patient_count
+    FROM {{{DATABASE_NAME}}}QT_QUERY_MASTER
+    WHERE create_date >= CURRENT_TIMESTAMP - INTERVAL ''1 day''
+	and delete_flag <>''Y''
+ and group_id = ''{{{PROJECT_ID}}}''
+    GROUP BY user_id
+    ORDER BY patient_count DESC
+    LIMIT 10
+) a
+
+UNION
+
+SELECT
+    ''ADMIN_TOTAL_QUERY'' AS query_name,
+    ''total_queries'' AS patient_range,
+    COUNT(query_master_id) AS patient_count
+FROM {{{DATABASE_NAME}}}QT_QUERY_MASTER
+where delete_flag <>''Y''
+ and group_id = ''{{{PROJECT_ID}}}''
+UNION
+
+SELECT
+    ''ADMIN_TOTAL_QUERY_30DAYS'' AS query_name,
+    ''total_queries'' AS patient_range,
+    COUNT(query_master_id) AS patient_count
+FROM {{{DATABASE_NAME}}}QT_QUERY_MASTER
+WHERE create_date >= CURRENT_TIMESTAMP - INTERVAL ''30 days''
+and delete_flag <>''Y''
+ and group_id = ''{{{PROJECT_ID}}}''
+
+UNION
+
+SELECT
+    ''ADMIN_TOTAL_QUERY_7DAYS'' AS query_name,
+    ''total_queries'' AS patient_range,
+    COUNT(query_master_id) AS patient_count
+FROM {{{DATABASE_NAME}}}QT_QUERY_MASTER
+WHERE create_date >= CURRENT_TIMESTAMP - INTERVAL ''7 days''
+and delete_flag <>''Y''
+ and group_id = ''{{{PROJECT_ID}}}''
+
+UNION
+
+SELECT
+    ''ADMIN_TOTAL_QUERY_1DAYS'' AS query_name,
+    ''total_queries'' AS patient_range,
+    COUNT(query_master_id) AS patient_count
+FROM {{{DATABASE_NAME}}}QT_QUERY_MASTER
+WHERE create_date >= CURRENT_TIMESTAMP - INTERVAL ''1 day''
+and delete_flag <>''Y''
+ and group_id = ''{{{PROJECT_ID}}}''
+UNION
+
+SELECT
+    ''ADMIN_TOTAL_USER_QUERY_30DAYS'' AS query_name,
+    ''total_user_queries'' AS patient_range,
+    COUNT(DISTINCT user_id) AS patient_count
+FROM {{{DATABASE_NAME}}}QT_QUERY_MASTER
+WHERE create_date >= CURRENT_TIMESTAMP - INTERVAL ''30 days''
+and delete_flag <>''Y''
+ and group_id = ''{{{PROJECT_ID}}}''
+UNION
+
+SELECT
+    ''ADMIN_TOTAL_USER_QUERY_7DAYS'' AS query_name,
+    ''total_user_queries'' AS patient_range,
+    COUNT(DISTINCT user_id) AS patient_count
+FROM {{{DATABASE_NAME}}}QT_QUERY_MASTER
+WHERE create_date >= CURRENT_TIMESTAMP - INTERVAL ''7 days''
+and delete_flag <>''Y''
+and group_id = ''{{{PROJECT_ID}}}''
+UNION
+
+SELECT
+    ''ADMIN_TOTAL_USER_QUERY_1DAYS'' AS query_name,
+    ''total_user_queries'' AS patient_range,
+    COUNT(DISTINCT user_id) AS patient_count
+FROM {{{DATABASE_NAME}}}QT_QUERY_MASTER
+WHERE create_date >= CURRENT_TIMESTAMP - INTERVAL ''1 day''
+and delete_flag <>''Y''
+and group_id = ''{{{PROJECT_ID}}}''
+ UNION ALL
+SELECT query_name, patient_range, patient_count
+FROM (
+
+SELECT
+    ''ADMIN_COUNT'' AS query_name,
+    TO_CHAR(create_date, ''YYYY-MM'') AS patient_range,
+    COUNT(create_date) AS patient_count
+FROM {{{DATABASE_NAME}}}qt_query_master
+where delete_flag <>''Y''
+ and group_id = ''{{{PROJECT_ID}}}''
+GROUP BY TO_CHAR(create_date, ''YYYY-MM'')
+ORDER BY TO_CHAR(create_date, ''YYYY-MM'')
+) a', null, null, null, null);
